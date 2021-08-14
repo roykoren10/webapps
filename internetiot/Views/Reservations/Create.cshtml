@@ -1,0 +1,128 @@
+﻿@model internetiot.Models.Reservation
+
+@{
+    ViewData["Title"] = "Create";
+    EscapeRoom room = ViewBag.room;
+}
+
+<script src=""></script>
+<h2>Create</h2>
+<h4>Reservation</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Participants" class="control-label"></label>
+                <input asp-for="Participants"  onblur="updatePrice()" min="@room.MinParticipants" max="@room.MaxParticipants" class="form-control" />
+                <span asp-validation-for="Participants" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                    <label asp-for="TotalPrice" class="control-label"></label>
+                    <input asp-for="TotalPrice" disabled class="form-control" />
+                    <span asp-validation-for="TotalPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartingTime" class="control-label"></label>
+                <input type="date" id="StartingTime" onchange="updateHours()" class="form-control" />
+                <span asp-validation-for="StartingTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Starting Hour</label>
+                <select id="hourSelection" disabled="true"></select>
+            </div>
+            <div class="form-group">
+                <input type="button" value="Create" class="btn btn-success" onclick=SaveReservations() />
+                <a asp-action="Index" class="btn btn-default"> Back to reservations List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+        function SaveReservations() {
+            var date = fixDate(document.getElementById("StartingTime").value);
+            var hour = document.getElementById("hourSelection").value;
+            var participants = document.getElementById("Participants").value;
+            var roomId = @room.Id;
+
+            var data = {
+                date: date,
+                time: hour,
+                roomId: roomId,
+                participants : participants
+            }
+
+
+            $.post('/Reservations/Create', data, function (reservationId) {
+                window.location.href = '/Reservations/Details?id=' + reservationId;
+            })
+
+        }
+        function updatePrice() {
+            var participantsElem = document.getElementById("Participants");
+            var priceElem = document.getElementById("TotalPrice");
+            priceElem.value = @room.PricePerParticipant * participantsElem.value
+        }
+
+        function updateHours() {
+            var select = document.getElementById("hourSelection")
+            select.disabled = false
+
+            select.options = null;
+
+            var day = fixDate(document.getElementById("StartingTime").value);
+            // Gets new times
+
+            var url = '/Reservations/GetAvailableTimes?roomId=' +@room.Id +'&day=' + day;
+
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                contentType: 'json',
+                success: function (dates) {
+                    var hoursParsed = dates.map(function (curr) {
+                        var date = new Date(curr);
+                        var hour = fixTime(date.getHours().toString());
+                        var min = fixTime(date.getMinutes().toString());
+                        return hour + ":" + min;
+                    })
+
+
+                    for (var i = 0; i < hoursParsed.length; i++) {
+                        var option = document.createElement("option");
+                        option.text = hoursParsed[i];
+                        select.add(option);
+                    }
+                }
+            })           
+        }
+
+        function fixTime(time) {
+            if (time.length == 1) {
+                return "0" + time;
+            }
+            else {
+                return time;
+            }
+        }
+
+        function fixDate(date) {
+            var splitted = date.split("-");
+            return splitted[2] + "." + splitted[1] + "." + splitted[0];
+        }
+    </script>
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+    }
+}
+
+
+
+
+

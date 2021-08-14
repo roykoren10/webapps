@@ -1,0 +1,75 @@
+﻿@model IEnumerable<internetiot.Models.Reservation>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="wrapper">
+    <h2>Rooms Reservations</h2>
+    <form class="form-inline filter" asp-controller="Reservations" asp-action="index">
+        <div class="form-group">
+            <label class="control-label" for="roomName">Room name</label>
+            <input class="form-control" type="text" name="roomName">
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="participants">No. participants</label>
+            <input class="form-control" type="number" name="participants" min="1" max="100">
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="totalPrice">Max price</label>
+            <input class="form-control" type="number" name="totalPrice" min="1">
+        </div>
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="form-group">
+                    <label class="control-label" for="emailAddress">Email</label>
+                    <input class="form-control" type="text" name="emailAddress" />
+                </div>
+            }
+        }
+        <input class="btn btn-primary" type="submit" value="Apply" />
+    </form>
+    <table class="table" style="text-align:center">
+        <thead>
+            <tr>
+                <th style="text-align:center">Room Name</th>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <th style="text-align:center">@Html.DisplayNameFor(model => model.User.Email)</th>
+                    }
+                }
+                <th style="text-align:center">@Html.DisplayNameFor(model => model.StartingTime)</th>
+                <th style="text-align:center">@Html.DisplayNameFor(model => model.Participants)</th>
+                <th style="text-align:center">@Html.DisplayNameFor(model => model.TotalPrice)</th>
+                <th style="text-align:center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.EscapeRoom.Name</td>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <td>@Html.DisplayFor(modelItem => item.User.Email)</td>
+                        }
+                    }
+                    <td>@Html.DisplayFor(modelItem => item.StartingTime)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Participants)</td>
+                    <td>@Html.DisplayFor(modelItem => item.TotalPrice)</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary"> Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"> Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
