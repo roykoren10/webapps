@@ -1,0 +1,29 @@
+﻿@model IEnumerable<internetiot.Models.ApplicationUser>
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Users</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>@UserManager.GetUserName(User)</th>
+        <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@UserManager.GetUserName(User)</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary"> Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"> Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
