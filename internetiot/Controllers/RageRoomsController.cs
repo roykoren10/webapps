@@ -233,7 +233,7 @@ namespace internetiot.Controllers
             var result = this._context.Reservations.GroupBy(x => x.RageRoom.Name).Select(s =>
             new
             {
-                RoomName = s.FirstOrDefault().RageRoom.Name,
+                RoomName = s.Key,
                 Profit = s.Sum(p => p.TotalPrice)
             }).OrderByDescending(x => x.Profit).Take(2).ToList();
 

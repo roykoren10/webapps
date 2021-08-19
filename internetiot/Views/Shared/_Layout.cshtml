@@ -22,7 +22,7 @@
     <header>
         <nav class="navbar navbar-light customNavbar">
             <div class="container-fluid">
-                <div class="navbar-header">                   
+                <div class="navbar-header">
                     <a class="navbar-brand navLink" asp-controller="Home" asp-action="Index">RageRooms</a>
                 </div>
                 <ul class="nav navbar-nav">
@@ -33,7 +33,7 @@
                         <li><a asp-controller="Genres" asp-action="Index">Genres</a></li>
                         <li><a asp-controller="RageRooms" asp-action="Statistics">Statistics</a></li>
                     }
-                </ul>                
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @await Html.PartialAsync("_LoginPartial")
                 </ul>
@@ -51,7 +51,9 @@
             </div>
         </center>
         <!-- Weather webservice -->
-        <script src="https://query.yahooapis.com/v1/public/yql?q=select item, wind from weather.forecast where woeid in (select woeid from geo.places(1) where text='Rishon LeZion, il') and u='c'&format=json&callback=weatherCallback"></script>
+        <script>
+            weatherCallback()
+        </script>
         <hr />
         <footer>
             <center><p>&copy; @DateTime.Now.Year RageRooms ALL RIGHTS RESERVED</p></center>
