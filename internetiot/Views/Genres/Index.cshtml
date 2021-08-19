@@ -1,0 +1,78 @@
+﻿@model IEnumerable<internetiot.Models.Genre>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="wrapper">
+    <h2>Our Genres</h2>
+    <form class="form-inline filter" asp-controller="Genres" asp-action="Index">
+        <div class="form-group">
+            <label class="control-label" for="genre">Search by name:</label>
+            <select class="form-control" id="Genre_Name" name="genre"><option value="">All</option></select>
+        </div>
+        <div class="form-group">
+            <input class="btn btn-primary" type="submit" value="Apply" />
+            <a class="btn btn-success" asp-action="Create">Create new genre</a>
+        </div>
+    </form>
+    <table class="table" style="text-align:center">
+        <thead>
+            <tr>
+                <th style="text-align:center">@Html.DisplayNameFor(model => model.Name)</th>
+                <th style="text-align:center">@Html.DisplayNameFor(model => model.Description)</th>
+                <th style="text-align:center">@Html.DisplayNameFor(model => model.MinAge)</th>
+                <th style="text-align:center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MinAge)
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary"> Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"> Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br /><h3>Rooms per genre</h3><br />
+    <div id="room-per-genre-graph"></div>
+</div>
+
+<script type="text/javascript">
+    $.ajax({
+        url: "/Genres/GetRoomsPerGenreGraph",
+        context: document.body
+    }).done(function (data) {
+        create_pie_chart_genre(data, "#room-per-genre-graph");
+    });
+</script>
+<script type="text/javascript">
+    var url = "/Genres/GetGenreList"
+    var select = document.getElementById("Genre_Name")
+    $.ajax({
+        type: 'GET',
+        url: url,
+        contentType: 'json',
+        success: function (genres) {
+
+            for (var i = 0; i < genres.length; i++) {
+                var option = document.createElement("option");
+                option.text = genres[i];
+                select.add(option);
+            }
+        }
+    })
+</script>
