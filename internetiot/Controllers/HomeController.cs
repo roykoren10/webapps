@@ -1,25 +1,35 @@
-﻿using internetiot.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using internetiot.Models;
+using internetiot.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace internetiot.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private RageRoomsContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(RageRoomsContext context)
         {
-            _logger = logger;
+            this._context = context;
         }
 
         public IActionResult Index()
         {
+            return View();
+        }
+
+        // Displays a way to contact the company
+        public IActionResult Contact()
+        {
+            ViewData["Message"] = "How can you contact us?\n";
+
             return View();
         }
 
@@ -29,9 +39,14 @@ namespace internetiot.Controllers
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Error(int? id)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            if (id == 404)
+            {
+                return View("NotFound");
+            }   
+            
+            return View();
         }
     }
 }
