@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "internetiot", "internetiot.csproj", "{C73B7657-6E88-4669-893C-C5A2F0FD9259}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "internetiot", "internetiot\internetiot.csproj", "{5DBBF6C8-36AA-4D62-8810-8D49727227AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C73B7657-6E88-4669-893C-C5A2F0FD9259}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C73B7657-6E88-4669-893C-C5A2F0FD9259}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C73B7657-6E88-4669-893C-C5A2F0FD9259}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C73B7657-6E88-4669-893C-C5A2F0FD9259}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DBBF6C8-36AA-4D62-8810-8D49727227AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DBBF6C8-36AA-4D62-8810-8D49727227AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DBBF6C8-36AA-4D62-8810-8D49727227AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DBBF6C8-36AA-4D62-8810-8D49727227AC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {DE32651A-297F-4BCD-BC29-256DBD6C1F09}
+		SolutionGuid = {1CFEBAA9-DF54-4DE3-977D-36AA0D4C63D7}
 	EndGlobalSection
 EndGlobal

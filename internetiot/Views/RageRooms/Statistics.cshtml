@@ -1,0 +1,17 @@
+﻿@model IEnumerable<internetiot.Models.RageRoom>
+@{
+    ViewData["Title"] = "Statistics";
+}
+
+<center><h2>Most Profitable Rooms</h2></center>
+<div style="margin-left:80px;" id="most-profitable-rooms-chart"></div>
+
+<script type="text/javascript">
+    $.ajax({
+        url: "/RageRooms/MostProfitableRooms",
+        context: document.body
+    }).done(function (data) {
+        create_pie_chart(data, "#most-profitable-rooms-chart");
+    });
+
+</script>
