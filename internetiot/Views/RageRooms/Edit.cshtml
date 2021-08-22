@@ -1,0 +1,93 @@
+﻿@model internetiot.Models.RageRoom
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>RageRoom</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MinParticipants" class="control-label"></label>
+                <input asp-for="MinParticipants" class="form-control" min="1" max="150" />
+                <span asp-validation-for="MinParticipants" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxParticipants" class="control-label"></label>
+                <input asp-for="MaxParticipants" class="form-control" min="1" max="150" />
+                <span asp-validation-for="MaxParticipants" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PricePerParticipant" class="control-label"></label>
+                <input asp-for="PricePerParticipant" class="form-control" min="1" max="150" />
+                <span asp-validation-for="PricePerParticipant" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Duration" class="control-label"></label>
+                <input asp-for="Duration" class="form-control" min="1" max="150" />
+                <span asp-validation-for="Duration" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImgUrl" class="control-label"></label>
+                <input asp-for="ImgUrl" class="form-control" />
+                <span asp-validation-for="ImgUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Genre.Name" class="control-label"></label>
+                <select id="Genre_Name" name="Genre.Name" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-default"> Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var url = "/Genres/GetGenreList"
+        var select = document.getElementById("Genre_Name")
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: 'json',
+            success: function (genres) {
+
+                for (var i = 0; i < genres.length; i++) {
+                    var option = document.createElement("option");
+                    option.text = genres[i];
+                    if (genres[i] == "@Model.Genre.Name") {
+                        option.selected = true;
+                    }
+                    
+                    select.add(option);
+                }
+            }
+        })
+
+
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

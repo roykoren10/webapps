@@ -1,0 +1,141 @@
+﻿@model internetiot.Models.RageRoom
+
+@{
+    ViewData["Title"] = "Details";
+}
+<div class="wrapper">
+    <h2>@Model.Name</h2>
+    <div class="room-card banner">
+        <img class="splash" src=@Model.ImgUrl>
+    </div>
+    <aside>
+        @Model.Description
+    </aside>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt style="text-align:left">
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+        <dt style="text-align:left">
+            @Html.DisplayNameFor(model => model.MinParticipants)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MinParticipants)
+        </dd>
+        <dt style="text-align:left">
+            @Html.DisplayNameFor(model => model.MaxParticipants)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MaxParticipants)
+        </dd>
+        <dt style="text-align:left">
+            @Html.DisplayNameFor(model => model.PricePerParticipant)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PricePerParticipant) NIS
+        </dd>
+        <dt style="text-align:left">
+            @Html.DisplayNameFor(model => model.Duration)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Duration) Hours
+        </dd>
+        <dt style="text-align:left">Directions</dt>
+        <dd><div id="myMap" style="position:relative;width:400px;height:300px;"></div></dd>
+        @if (User.Identity.IsAuthenticated)
+        {
+            @if (User.IsInRole("Admin"))
+            {
+                <dt style="text-align:left">Profits</dt>
+                <dd><div id="room-orders-count-by-month"></div></dd>
+            }
+        }
+    </dl>
+    <div>
+        @if (User.Identity.IsAuthenticated)
+        {
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger"> Delete</a>
+            }
+
+            <a asp-controller="Reservations" asp-action="Create" asp-route-id="@Model.Id" class="btn btn-success">Order</a>
+            <a asp-action="Index" class="btn btn-default">Back to rooms</a>
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    var map;
+    var searchManager;
+
+    function GetMap() {
+        map = new Microsoft.Maps.Map("#myMap", { zoom: 7 });
+        addRoomToMap('@Model.Name', '@Model.Address');
+
+    }
+
+    function addRoomToMap(name, address) {
+        findLocationByAddress(address, function (location) {
+            var roomLocation = location;
+            var roomPoint = new Microsoft.Maps.Pushpin(roomLocation);
+            //map.setView({ bounds: result.bestView })
+            var infobox = new Microsoft.Maps.Infobox(roomLocation, {
+                title: name,
+                description: address,
+                visible: false
+            });
+            infobox.setMap(map);
+            Microsoft.Maps.Events.addHandler(roomPoint, 'click', function () {
+                infobox.setOptions({ visible: true });
+            });
+            map.entities.push(roomPoint);
+        });
+    }
+
+    function findLocationByAddress(address, foo) {
+        // If search manager is not defined, load the search module
+        if (!searchManager) {
+            // Create an instance of the search manager and re-enter function
+            Microsoft.Maps.loadModule('Microsoft.Maps.Search', function () {
+                searchManager = new Microsoft.Maps.Search.SearchManager(map);
+                findLocationByAddress(address, foo);
+            });
+        } else {
+            var searchRequest = {
+                where: address,
+                callback: function (r) {
+                    foo(r.results[0].location);
+                },
+                errorCallback: function (e) {
+                    // If there is an error
+                    console.log("No results found for this address: " + address);
+                }
+            };
+
+            // Make the geocode request
+            searchManager.geocode(searchRequest);
+        }
+    }
+</script>
+<script type="text/javascript" src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AmTbZrbvXwVy0XO22GneszL2g9TZqn9gsLSs8ejbQe-EIb5_QvppPlAyyD_59HII" async defer></script>
+
+@if (User.Identity.IsAuthenticated)
+{
+    @if (User.IsInRole("Admin"))
+    {
+        <script type="text/javascript">
+    $.ajax({
+        url: "../../Admin/RoomOrdersCountByMonth/@Model.Id",
+        context: document.body
+    }).done(function (data) {
+        if(data.length)
+            create_bar_chart(data, "#room-orders-count-by-month");
+    });
+        </script>
+    }
+}

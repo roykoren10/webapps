@@ -1,0 +1,181 @@
+﻿@model IEnumerable<internetiot.Models.RageRoom>
+
+@{
+    ViewData["Title"] = "Admin";
+}
+
+<div class="wrapper">
+    <h2>Track and Manage</h2>
+    <form class="form-inline filter" asp-controller="RageRooms" asp-action="Index">
+        <div class="form-group">
+            <label class="control-label" for="roomName">Room name </label>
+            <input class="form-control" type="text" name="roomName">
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="participants">No. participants </label>
+            <input class="form-control" type="number" name="participants" min="1" max="100">
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="maxPrice">Max price per participant </label>
+            <input class="form-control" type="number" name="maxPrice" min="1" max="1000">
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="Genre_Name">Genre </label>
+            <select class="form-control" id="Genre_Name" name="genre"><option value="">All</option></select>
+        </div>
+        <div class="form-group submit">
+            <input class="btn btn-primary" type="submit" value="Apply" />
+        </div>
+    </form>
+
+    <div class="rooms-container">
+        @foreach (RageRoom curr in @Model)
+        {
+            <div onclick="location.href='@Url.Action("Details", new { id=curr.Id })'" class="room-card">
+                <input type="hidden" value="@curr.Id">
+                <div class="tag">@curr.Genre.Name</div>
+                <img class="splash" src=@curr.ImgUrl>
+                <section class="info">
+                    <h1>@curr.Name</h1>
+                    <div class="location">@curr.Address <img src="~/Content/location.svg"></div>
+                </section>
+                <a asp-action="Details" asp-route-id="@curr.Id" class="btn btn-info">Details</a>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@curr.Id" class="btn btn-primary"> Edit</a>
+                        <a asp-action="Delete" asp-route-id="@curr.Id" class="btn btn-danger"> Delete</a>
+                    }
+                }
+            </div>
+        }
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            @if (User.IsInRole("Admin"))
+            {
+                <div onclick="location.href='@Url.Action("Create")'" class="room-card new">
+                    <h1>Create new +</h1>
+                </div>
+            }
+        }
+    </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="profitable-wrapper">
+                <h3>Most Profitable Rooms</h3>
+                <div id="most-profitable-rooms-chart"></div>
+            </div>
+        }
+    }
+    <div id="myMap" style="position:relative;width:800px;height:600px;"></div>
+
+</div>
+
+<script type="text/javascript">
+    var map;
+    var searchManager;
+
+    function GetMap() {
+        map = new Microsoft.Maps.Map("#myMap", { zoom: 7 });
+
+        @foreach (var item in Model) {
+            @:addRoomToMap('@item.Name', '@item.Address');
+        }
+    }
+
+    function addRoomToMap(name, address) {
+        findLocationByAddress(address, function (location) {
+            var roomLocation = location;
+            var roomPoint = new Microsoft.Maps.Pushpin(roomLocation);
+            var infobox = new Microsoft.Maps.Infobox(roomLocation, {
+                title: name,
+                description: address,
+                visible: false
+            });
+            infobox.setMap(map);
+            Microsoft.Maps.Events.addHandler(roomPoint, 'click', function () {
+                infobox.setOptions({ visible: true });
+            });
+            map.entities.push(roomPoint);
+        });
+    }
+
+    function findLocationByAddress(address, foo) {
+        // If search manager is not defined, load the search module
+        if (!searchManager) {
+            // Create an instance of the search manager and re-enter function
+            Microsoft.Maps.loadModule('Microsoft.Maps.Search', function () {
+                searchManager = new Microsoft.Maps.Search.SearchManager(map);
+                findLocationByAddress(address, foo);
+            });
+        } else {
+            var searchRequest = {
+                where: address,
+                callback: function (r) {
+                    foo(r.results[0].location);
+                },
+                errorCallback: function (e) {
+                    // If there is an error
+                    console.log("No results found for this address: " + address);
+                }
+            };
+
+            // Make the geocode request
+            searchManager.geocode(searchRequest);
+        }
+    }
+</script>
+<script type="text/javascript" src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AmTbZrbvXwVy0XO22GneszL2g9TZqn9gsLSs8ejbQe-EIb5_QvppPlAyyD_59HII" async defer></script>
+<script type="text/javascript">
+    var url = "/Genres/GetGenreList"
+    var select = document.getElementById("Genre_Name")
+    $.ajax({
+        type: 'GET',
+        url: url,
+        contentType: 'json',
+        success: function (genres) {
+
+            for (var i = 0; i < genres.length; i++) {
+                var option = document.createElement("option");
+                option.text = genres[i];
+                select.add(option);
+            }
+        }
+    })
+</script>
+<script>
+    $.ajax({
+        url: "../../RageRooms/UserRecommendedRooms",
+        context: document.body
+    }).done(function (data) {
+        recommended_rooms_ids = data
+        if (recommended_rooms_ids.length) {
+            $(".room-card").each(function (index) {
+                let room_id = Number($(this).children("input").first().val());
+
+                if ($.inArray(room_id, data) != -1) {
+                    $(this).children(".info").first().addClass('recommended');
+                }
+            });
+        }
+    });
+</script>
+@if (User.Identity.IsAuthenticated)
+{
+    @if (User.IsInRole("Admin"))
+    {
+        <script type="text/javascript">
+            $.ajax({
+                url: "/RageRooms/MostProfitableRooms",
+                context: document.body
+            }).done(function (data) {
+                create_pie_chart(data, "#most-profitable-rooms-chart");
+            });
+
+        </script>
+    }
+}
