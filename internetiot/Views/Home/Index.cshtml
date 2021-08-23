@@ -2,7 +2,48 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div style="position: relative;">
+    <canvas id="canvas" width="1140" height="250"></canvas>
+    <script>
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        var imageObj = new Image();
+
+        imageObj.onload = function () {
+            context.drawImage(imageObj, 0, 0);
+        };
+
+        imageObj.src = '/Content/MainLogo1.jpg';
+    </script>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-6">
+        <h2>What is a Rage Room?</h2>
+        <video width="560" height="317" controls>
+            <source src="~/Content/RageRoomsPromo.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="col-md-6" style="padding-left: 80px;"><br />
+        <div id="fb-root"></div>
+        <script>
+            (function (d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.1&appId=295415171250806';
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+        </script>
+        <div class="fb-page" data-href="https://www.facebook.com/BreakRoomIsrael" data-tabs="timeline" data-width="500" data-height="360" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/RageRooms-259264181584450" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/RageRooms-259264181584450"></a></blockquote></div>
+    </div>    
+</div>
+<div class="row">
+    <br /><h2>About Rage Rooms</h2>
+    <p class="six-col">
+        There are a lot of Rage rooms spreaded widely around Israel.<br /><br />
+        <b>Rage room</b> A way to get some steam out and have some harmless fun in a unique way.<br />
+        There are different types of Rage rooms, in different many themes. <br /><br />
+        In order to make it easy for individuals and families to get these different rooms and enjoy high quality time together, we would like to offer you a possibility to view various rage room descriptions, reviews and rates to ease your choise.
+    </p>
 </div>
