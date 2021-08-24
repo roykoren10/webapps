@@ -14,9 +14,9 @@ namespace internetiot.Controllers
 {
     public class GenresController : Controller
     {
-        private readonly EscapeRoomsContext _context;
+        private readonly RageRoomsContext _context;
 
-        public GenresController(EscapeRoomsContext context)
+        public GenresController(RageRoomsContext context)
         {
             _context = context;
         }
@@ -175,7 +175,7 @@ namespace internetiot.Controllers
         {
 
             return Json((from g in _context.Genre
-                         join r in _context.EscapeRooms
+                         join r in _context.RageRooms
                          on g.Id equals r.Genre.Id
                          select new
                          {

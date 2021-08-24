@@ -14,22 +14,22 @@ using internetiot.Handlers;
 
 namespace internetiot.Controllers
 {
-    public class EscapeRoomsController : Controller
+    public class RageRoomsController : Controller
     {
-        private readonly EscapeRoomsContext _context;
+        private readonly RageRoomsContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
 
-        public EscapeRoomsController(EscapeRoomsContext context, UserManager<ApplicationUser> userManager)
+        public RageRoomsController(RageRoomsContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
-        // GET: EscapeRooms
+        // GET: RageRooms
         public async Task<IActionResult> Index(string roomName, int participants, int maxPrice, string genre)
         {
-            var rooms = from r in _context.EscapeRooms
+            var rooms = from r in _context.RageRooms
                         select r;
 
             if (!String.IsNullOrEmpty(roomName))
@@ -56,7 +56,7 @@ namespace internetiot.Controllers
             return View(await rooms.Include(r => r.Genre).ToListAsync());
         }
 
-        // GET: EscapeRooms/Details/5
+        // GET: RageRooms/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -64,14 +64,14 @@ namespace internetiot.Controllers
                 return new NotFoundViewResult("NotFoundError", "Room was not found");
             }
 
-            var escapeRoom = await _context.EscapeRooms
+            var RageRoom = await _context.RageRooms
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (escapeRoom == null)
+            if (RageRoom == null)
             {
                 return new NotFoundViewResult("NotFoundError", "Room was not found");
             }
 
-            return View(escapeRoom);
+            return View(RageRoom);
         }
 
         public async Task<IActionResult> Order(int? id)
@@ -81,31 +81,31 @@ namespace internetiot.Controllers
                 return new NotFoundViewResult("NotFoundError", "Room was not found");
             }
 
-            var escapeRoom = await _context.EscapeRooms
+            var RageRoom = await _context.RageRooms
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (escapeRoom == null)
+            if (RageRoom == null)
             {
                 return new NotFoundViewResult("NotFoundError", "Room was not found");
             }
 
-            return View(escapeRoom);
+            return View(RageRoom);
         }
 
 
-        // GET: EscapeRooms/Create
+        // GET: RageRooms/Create
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: EscapeRooms/Create
+        // POST: RageRooms/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,Name,Address,Description,MinParticipants,MaxParticipants,PricePerParticipant,Duration,ImgUrl,Genre")] EscapeRoom escapeRoom)
+        public async Task<IActionResult> Create([Bind("Id,Name,Address,Description,MinParticipants,MaxParticipants,PricePerParticipant,Duration,ImgUrl,Genre")] RageRoom RageRoom)
         {
             string gname = ModelState.ToList().First(x => x.Key == "Genre.Name").Value.RawValue.ToString();
             var genre = _context.Genre.Where(g => g.Name == gname);
@@ -113,14 +113,14 @@ namespace internetiot.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    escapeRoom.Genre = genre.ToList()[0];
-                    _context.Add(escapeRoom);
+                    RageRoom.Genre = genre.ToList()[0];
+                    _context.Add(RageRoom);
                     await _context.SaveChangesAsync();
-                    FaceBookHandler.PostMessage(escapeRoom);
+                    FaceBookHandler.PostMessage(RageRoom);
                     return RedirectToAction(nameof(Index));
                 }                
 
-                return View(escapeRoom);
+                return View(RageRoom);
             }
             else
             {
@@ -129,7 +129,7 @@ namespace internetiot.Controllers
 
         }
 
-        // GET: EscapeRooms/Edit/5
+        // GET: RageRooms/Edit/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -138,23 +138,23 @@ namespace internetiot.Controllers
                 return new NotFoundViewResult("NotFoundError", "Room was not found");
             }
 
-            var escapeRoom = _context.EscapeRooms.Include(r => r.Genre).Where(r => r.Id == id);
-            if (escapeRoom.Count() == 0)
+            var RageRoom = _context.RageRooms.Include(r => r.Genre).Where(r => r.Id == id);
+            if (RageRoom.Count() == 0)
             {
                 return new NotFoundViewResult("NotFoundError", "Room was not found");
             }
-            return View(escapeRoom.ToList()[0]);
+            return View(RageRoom.ToList()[0]);
         }
 
-        // POST: EscapeRooms/Edit/5
+        // POST: RageRooms/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Address,Description,MinParticipants,MaxParticipants,PricePerParticipant,Duration,ImgUrl,Genre")] EscapeRoom escapeRoom)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Address,Description,MinParticipants,MaxParticipants,PricePerParticipant,Duration,ImgUrl,Genre")] RageRoom RageRoom)
         {
-            if (id != escapeRoom.Id)
+            if (id != RageRoom.Id)
             {
                 return new NotFoundViewResult("NotFoundError", "Room was not found");
             }
@@ -167,8 +167,8 @@ namespace internetiot.Controllers
                     var genre = _context.Genre.Where(g => g.Name == gname);
                     if (genre.Count() != 0)
                     {
-                        escapeRoom.Genre = genre.ToList()[0];
-                        _context.Update(escapeRoom);
+                        RageRoom.Genre = genre.ToList()[0];
+                        _context.Update(RageRoom);
                         await _context.SaveChangesAsync();
                     }
                     else
@@ -184,10 +184,10 @@ namespace internetiot.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(escapeRoom);
+            return View(RageRoom);
         }
 
-        // GET: EscapeRooms/Delete/5
+        // GET: RageRooms/Delete/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -196,17 +196,17 @@ namespace internetiot.Controllers
                 return new NotFoundViewResult("NotFoundError", "Room was not found");
             }
 
-            var escapeRoom = await _context.EscapeRooms
+            var RageRoom = await _context.RageRooms
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (escapeRoom == null)
+            if (RageRoom == null)
             {
                 return new NotFoundViewResult("NotFoundError", "Room was not found");
             }
 
-            return View(escapeRoom);
+            return View(RageRoom);
         }
 
-        // POST: EscapeRooms/Delete/5
+        // POST: RageRooms/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -214,8 +214,8 @@ namespace internetiot.Controllers
         {
             try
             {
-                var escapeRoom = await _context.EscapeRooms.FindAsync(id);
-                _context.EscapeRooms.Remove(escapeRoom);
+                var RageRoom = await _context.RageRooms.FindAsync(id);
+                _context.RageRooms.Remove(RageRoom);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -230,21 +230,21 @@ namespace internetiot.Controllers
         [Authorize(Roles = "Admin")]
         public JsonResult MostProfitableRooms()
         {
-            var result = this._context.Reservations.GroupBy(x => x.EscapeRoom.Name).Select(s =>
+            var result = this._context.Reservations.GroupBy(x => x.RageRoom.Name).Select(s =>
             new
             {
-                RoomName = s.FirstOrDefault().EscapeRoom.Name,
+                RoomName = s.FirstOrDefault().RageRoom.Name,
                 Profit = s.Sum(p => p.TotalPrice)
             }).OrderByDescending(x => x.Profit).Take(2).ToList();
 
             return Json(result);
         }
 
-        // GET: EscapeRooms for statistics
+        // GET: RageRooms for statistics
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Statistics(string roomName, int participants, int maxPrice, string genre)
         {
-            var rooms = from r in _context.EscapeRooms
+            var rooms = from r in _context.RageRooms
                         select r;
 
             if (!String.IsNullOrEmpty(roomName))
@@ -271,9 +271,9 @@ namespace internetiot.Controllers
             return View(await rooms.Include(r => r.Genre).ToListAsync());
         }
 
-        private bool EscapeRoomExists(int id)
+        private bool RageRoomExists(int id)
         {
-            return _context.EscapeRooms.Any(e => e.Id == id);
+            return _context.RageRooms.Any(e => e.Id == id);
         }
     }
 }
