@@ -52,7 +52,7 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@item.EscapeRoom.Name</td>
+                    <td>@item.RageRoom.Name</td>
                     @if (User.Identity.IsAuthenticated)
                     {
                         @if (User.IsInRole("Admin"))
