@@ -8,24 +8,24 @@ namespace internetiot.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "Latitude",
-                table: "EscapeRooms");
+                table: "RageRooms");
 
             migrationBuilder.DropColumn(
                 name: "Longtitude",
-                table: "EscapeRooms");
+                table: "RageRooms");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<double>(
                 name: "Latitude",
-                table: "EscapeRooms",
+                table: "RageRooms",
                 nullable: false,
                 defaultValue: 0.0);
 
             migrationBuilder.AddColumn<double>(
                 name: "Longtitude",
-                table: "EscapeRooms",
+                table: "RageRooms",
                 nullable: false,
                 defaultValue: 0.0);
         }

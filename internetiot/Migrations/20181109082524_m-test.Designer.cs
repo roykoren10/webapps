@@ -9,7 +9,7 @@ using internetiot.Data;
 
 namespace internetiot.Migrations
 {
-    [DbContext(typeof(EscapeRoomsContext))]
+    [DbContext(typeof(RageRoomsContext))]
     [Migration("20181109082524_m-test")]
     partial class mtest
     {
@@ -72,7 +72,7 @@ namespace internetiot.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("internetiot.Models.EscapeRoom", b =>
+            modelBuilder.Entity("internetiot.Models.RageRoom", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -100,7 +100,7 @@ namespace internetiot.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("EscapeRooms");
+                    b.ToTable("RageRooms");
                 });
 
             modelBuilder.Entity("internetiot.Models.Genre", b =>
@@ -126,7 +126,7 @@ namespace internetiot.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<int?>("EscapeRoomId");
+                    b.Property<int?>("RageRoomId");
 
                     b.Property<int>("Score");
 
@@ -134,7 +134,7 @@ namespace internetiot.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EscapeRoomId");
+                    b.HasIndex("RageRoomId");
 
                     b.ToTable("Rates");
                 });
@@ -145,7 +145,7 @@ namespace internetiot.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("EscapeRoomId");
+                    b.Property<int?>("RageRoomId");
 
                     b.Property<int>("Participants");
 
@@ -157,7 +157,7 @@ namespace internetiot.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EscapeRoomId");
+                    b.HasIndex("RageRoomId");
 
                     b.HasIndex("UserId");
 
@@ -274,7 +274,7 @@ namespace internetiot.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("internetiot.Models.EscapeRoom", b =>
+            modelBuilder.Entity("internetiot.Models.RageRoom", b =>
                 {
                     b.HasOne("internetiot.Models.Genre", "Genre")
                         .WithMany()
@@ -283,16 +283,16 @@ namespace internetiot.Migrations
 
             modelBuilder.Entity("internetiot.Models.Rate", b =>
                 {
-                    b.HasOne("internetiot.Models.EscapeRoom", "EscapeRoom")
+                    b.HasOne("internetiot.Models.RageRoom", "RageRoom")
                         .WithMany("Rates")
-                        .HasForeignKey("EscapeRoomId");
+                        .HasForeignKey("RageRoomId");
                 });
 
             modelBuilder.Entity("internetiot.Models.Reservation", b =>
                 {
-                    b.HasOne("internetiot.Models.EscapeRoom", "EscapeRoom")
+                    b.HasOne("internetiot.Models.RageRoom", "RageRoom")
                         .WithMany()
-                        .HasForeignKey("EscapeRoomId");
+                        .HasForeignKey("RageRoomId");
 
                     b.HasOne("internetiot.Models.ApplicationUser", "User")
                         .WithMany()
