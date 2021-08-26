@@ -41,10 +41,10 @@ namespace internetiot
 
             services.AddControllersWithViews();
 
-            string connection = Configuration.GetConnectionString("EscapeRoomDB");
-            services.AddDbContext<EscapeRoomsContext>(options => options.UseSqlServer(connection));
+            string connection = Configuration.GetConnectionString("RageRoomDB");
+            services.AddDbContext<RageRoomsContext>(options => options.UseSqlServer(connection));
             services.AddIdentity<ApplicationUser, IdentityRole>()
-           .AddEntityFrameworkStores<EscapeRoomsContext>()
+           .AddEntityFrameworkStores<RageRoomsContext>()
            .AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>

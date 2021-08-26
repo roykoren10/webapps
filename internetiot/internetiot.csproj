@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\EscapeRooms\Statistics.cshtml">
+    <Content Update="Views\RageRooms\Statistics.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Reservations\ReservationErrorRoomNotFound.cshtml">
